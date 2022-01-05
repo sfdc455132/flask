@@ -47,34 +47,34 @@ app = Flask(__name__)
 #     return f'{name} bmi數值為:{bmi}'
 
 
-# @app.route('/')
-# def index():
-#     name = '741'
-#     date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-#     stocks = [
-#         {'分類': '日經指數', '指數': '22,920.30'},
-#         {'分類': '韓國綜合', '指數': '2,304.59'},
-#         {'分類': '香港恆生', '指數': '25,083.71'},
-#         {'分類': '上海綜合', '指數': '3,380.68'}
-#     ]
-#     # HTML 那邊需改成<>{{name}}<>
-#     return render_template('./index.html', **locals())
-#     # context={'name':name,'date':date}
-#     # HTML那邊需改成 <>context[name]<>
+@app.route('/')
+def index():
+    name = '741'
+    date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    stocks = [
+        {'分類': '日經指數', '指數': '22,920.30'},
+        {'分類': '韓國綜合', '指數': '2,304.59'},
+        {'分類': '香港恆生', '指數': '25,083.71'},
+        {'分類': '上海綜合', '指數': '3,380.68'}
+    ]
+    # HTML 那邊需改成<>{{name}}<>
+    return render_template('./index.html', **locals())
+    # context={'name':name,'date':date}
+    # HTML那邊需改成 <>context[name]<>
 
 
-@app.route('/', methods=["GET", "POST"])
+@app.route('/pm25', methods=["GET", "POST"])
 def pm25():
     date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     if request.method == 'GET':
-        datas, columns = get_pm25(sort='5')
+        datas, columns = get_pm25(type=0)
     if request.method == "POST":
         if request.form.get('ascending'):
-            datas, columns = get_pm25()
+            datas, columns = get_pm25(type=2)
             print('ascending')
         else:
-            datas, columns = get_pm25(sort=True)
+            datas, columns = get_pm25(type=1)
             print('reverse')
     return render_template('./pm25.html', **locals())
 
