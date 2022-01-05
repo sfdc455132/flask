@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table {
+            size: 2rem;
+            margin: 2rem auto;
+            width: 50%;
+            font-size: 24px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        th {
+            background-color: brown;
+            color: cornsilk;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 50px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        <b>各市PM2.5指數</b>
+    </h1>
+    <p>登入時間: {{date}}</p>
+    <form action="" method="post">
+        <button type="submit">排序</button>
+    </form>
+    <table border="1">
+        <thead>
+            <tr>
+                {% for col in columns %}
+                <th>{{col}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in datas %}
+            <tr>
+                {% for td in data %}
+                <td>{{td}}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>
