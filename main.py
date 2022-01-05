@@ -3,7 +3,7 @@ from datetime import date, datetime
 from flask import render_template
 from flask.json import tojson_filter
 import pandas as pd
-
+from pm25 import get_pm25
 app = Flask(__name__)
 
 
@@ -66,13 +66,16 @@ app = Flask(__name__)
 @app.route('/', methods=["GET", "POST"])
 def pm25():
     date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    url = 'https://data.epa.gov.tw/api/v1/aqx_p_02?limit=1000&api_key=9be7b239-557b-4c10-9775-78cadfc555e9&sort=ImportDate%20desc&format=csv'
-    df = pd.read_csv(url).dropna()
-    columns = ['Site', 'county', 'PM25']
-    datas = df[columns].values.tolist()
-    if request.method == "POST":
-        datas = sorted(datas, key=lambda x: x[-1], reverse=True)
 
+    if request.method == 'GET':
+        datas, columns = get_pm25(sort='5')
+    if request.method == "POST":
+        if request.form.get('ascending'):
+            datas, columns = get_pm25()
+            print('ascending')
+        else:
+            datas, columns = get_pm25(sort=True)
+            print('reverse')
     return render_template('./pm25.html', **locals())
 
 

@@ -26,7 +26,18 @@
 
         h1 {
             font-size: 50px;
+            text-align: center;
+            margin: 0px 200px;
+            border-radius: 2rem;
+            background-color: darkgoldenrod;
+        }
 
+        p {
+            text-align: center;
+        }
+
+        form {
+            text-align: center;
         }
     </style>
 </head>
@@ -35,9 +46,13 @@
     <h1>
         <b>各市PM2.5指數</b>
     </h1>
-    <p>登入時間: {{date}}</p>
+    <p>現在時間: {{date}}</p>
+    <!-- <form action="" method="post">
+        <button type="submmit">由大至小排序</button>
+    </form> -->
     <form action="" method="post">
-        <button type="submit">排序</button>
+        <input type="submit" value="由大到小" name='reverse'>
+        <input type="submit" value="由小到大" name='ascending'>
     </form>
     <table border="1">
         <thead>
