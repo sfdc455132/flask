@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.2.2/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div id="container">
+        <div id="main" style="width: 600px;height: 400px;"></div>
+    </div>
+    <script>
+        const chart1 = echarts.init(document.querySelector('#main'));
+
+        $(document).ready(() => {
+            drawPM25Chart();
+        });
+
+        function drawPM25Chart() {
+            $.ajax(
+                {
+                    url: '/pm25-data',
+                    type: 'post',
+                    dataType: 'json',
+                    success: (data) => {
+                        console.log(data);
+                        // 指定图表的配置项和数据
+                        const option = {
+                            title: {
+                                text: 'PM2.5全台資訊'
+                            },
+                            tooltip: {},
+                            legend: {
+                                data: ['PM2.5']
+                            },
+                            xAxis: {
+                                data: data['sites']
+                            },
+                            yAxis: {},
+                            series: [
+                                {
+                                    name: 'pm2.5',
+                                    type: 'bar',
+                                    data: data['pm25_da']
+                                }
+                            ]
+                        };
+
+                        chart1.setOption(option);
+
+                    },
+                    error: () => alert('讀取失敗!'),
+                }
+            )
+        }
+
+    </script>
+
+</body>
+
+</html>

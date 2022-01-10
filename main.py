@@ -4,6 +4,8 @@ from flask import render_template
 from flask.json import tojson_filter
 import pandas as pd
 from pm25 import get_pm25
+import json
+
 app = Flask(__name__)
 
 
@@ -77,6 +79,21 @@ def pm25():
             datas, columns = get_pm25(type=1)
             print('reverse')
     return render_template('./pm25.html', **locals())
+
+
+@app.route('/pm25-echart')
+def pm25_echart():
+    return render_template('./pm25-echart.html')
+
+
+@app.route('/pm25-data', methods=['GET', 'POST'])
+def pm25_data_json():
+    values, columns = get_pm25(type=0)
+    sites = [value[0] for value in values]
+    pm25_da = [value[-1] for value in values]
+    time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    datas = {'time': time, 'sites': sites, 'pm25_da': pm25_da}
+    return json.dumps(datas, ensure_ascii=False)
 
 
 if __name__ == "__main__":
