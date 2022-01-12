@@ -3,7 +3,7 @@ from datetime import date, datetime
 from flask import render_template
 from flask.json import tojson_filter
 import pandas as pd
-from pm25 import get_pm25, get_six_pm25
+from pm25 import get_pm25, get_six_pm25, get_county_pm25
 import json
 
 app = Flask(__name__)
@@ -79,6 +79,15 @@ def pm25():
             datas, columns = get_pm25(type=1)
             print('reverse')
     return render_template('./pm25.html', **locals())
+
+
+@app.route('/county-pm25/<string:county>')
+def county_pm25_get(county):
+    datas = get_county_pm25(county)
+    sites = [da[0] for da in datas]
+    pm25 = [da[1] for da in datas]
+
+    return json.dumps({'sites': sites, 'pm25': pm25}, ensure_ascii=False)
 
 
 @app.route('/pm25-echart', methods=['GET', 'POST'])
