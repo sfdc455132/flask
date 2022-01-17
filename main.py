@@ -3,7 +3,7 @@ from datetime import date, datetime
 from flask import render_template
 from flask.json import tojson_filter
 import pandas as pd
-from pm25 import get_pm25, get_six_pm25, get_county_pm25
+from pm25 import get_pm25, get_six_pm25, get_county_pm25, get_county
 import json
 
 app = Flask(__name__)
@@ -48,7 +48,7 @@ app = Flask(__name__)
 #     bmi = eval(height)/(eval(weight)**2)
 #     return f'{name} bmi數值為:{bmi}'
 
-
+# 基本渲染
 @app.route('/')
 def index():
     name = '741'
@@ -64,46 +64,29 @@ def index():
     # context={'name':name,'date':date}
     # HTML那邊需改成 <>context[name]<>
 
-
+# 渲染PM25網頁
 @app.route('/pm25', methods=["GET", "POST"])
 def pm25():
     date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     if request.method == 'GET':
-        datas, columns = get_pm25(type=0)
+        datas, columns, df = get_pm25(type=0)
     if request.method == "POST":
         if request.form.get('ascending'):
-            datas, columns = get_pm25(type=2)
+            datas, columns, df = get_pm25(type=2)
             print('ascending')
         else:
-            datas, columns = get_pm25(type=1)
+            datas, columns, df = get_pm25(type=1)
             print('reverse')
     return render_template('./pm25.html', **locals())
 
-
-@app.route('/county-pm25/<string:county>')
-def county_pm25_get(county):
-    datas = get_county_pm25(county)
-    sites = [da[0] for da in datas]
-    pm25 = [da[1] for da in datas]
-
-    return json.dumps({'sites': sites, 'pm25': pm25}, ensure_ascii=False)
-
-
+# 渲染pm25-echart網頁
 @app.route('/pm25-echart', methods=['GET', 'POST'])
 def pm25_echart():
-    return render_template('./pm25-echart.html')
+    countys = get_county()
+    return render_template('./pm25-echart.html', countys=countys)
 
-
-@app.route('/six-pm25', methods=['GET', 'POST'])
-def six_pm25():
-    six_pm25 = get_six_pm25()
-    citys = list(six_pm25.keys())
-    pm25 = list(six_pm25.values())
-
-    return json.dumps({'citys': citys, 'pm25': pm25}, ensure_ascii=False)
-
-
+# 取得PM25資料
 @app.route('/pm25-data', methods=['GET', 'POST'])
 def pm25_data_json():
     values, columns, df = get_pm25(type=0)
@@ -118,6 +101,24 @@ def pm25_data_json():
     datas = {'time': time, 'sites': sites, 'pm25_da': pm25_da,
              'highest': highest, 'lowest': lowest}
     return json.dumps(datas, ensure_ascii=False)
+
+# 取得六都資料
+@app.route('/six-pm25', methods=['GET', 'POST'])
+def six_pm25():
+    six_pm25 = get_six_pm25()
+    citys = list(six_pm25.keys())
+    pm25 = list(six_pm25.values())
+
+    return json.dumps({'citys': citys, 'pm25': pm25}, ensure_ascii=False)
+
+# 依縣市取得各區PM2.5數值
+@app.route('/county-pm25/<string:county>', methods=["GET", "POST"])
+def county_pm25_get(county):
+    datas = get_county_pm25(county)
+    sites = [da[0] for da in datas]
+    pm25 = [da[1] for da in datas]
+
+    return json.dumps({'sites': sites, 'pm25': pm25, 'county': county}, ensure_ascii=False)
 
 
 if __name__ == "__main__":

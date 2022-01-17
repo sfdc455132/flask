@@ -17,13 +17,35 @@
     <div id=date></div>
     <input type="button" value="更新時間">
     <br>
+    <!-- 顯示最高及最低PM25 -->
     <div id='highest_pm25_site' class=banner>123</div>
     <div id='highest_pm25_vaule' class=value></div>
-
     <div id='lowest_pm25_site' class=banner></div>
     <div id='lowest_pm25_value' class=value></div>
+    <!-- PM25主要繪圖區 -->
     <div id="pm25_scrip"></div>
+
+
+    <!-- PM25六都繪圖區 -->
     <div id='pm25_six'></div>
+
+
+    <!-- 縣市選擇區 -->
+    <select name="county_select" id="county_select" value="請選擇縣市">
+        <option value="">請選擇縣市</option>
+        <!-- <option value="新北市">新北市</option>
+        <option value="臺北市">台北市</option>
+        <option value="高雄市">高雄市</option> -->
+        {% for county in countys %}
+        <option value={{county}}>{{county}}</option>
+        {% endfor %}
+    </select>
+    <!-- 傳送選項的值 -->
+    <input type="submit" value="確定" id="county_select_b">
+
+
+    <!-- PM25縣市繪圖區 -->
+    <div id='county_pm25'></div>
     <script src='../static/js/pm25-echart.js'></script>
 
 

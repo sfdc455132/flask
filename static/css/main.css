@@ -3,12 +3,17 @@ body{
 }
 
 #pm25_scrip{
-    width: 1024px;
+    width: 90%;
     height: 400px;
 }   
 
 #pm25_six{
-    width: 1024px;
+    width: 90%;
+    height: 400px;
+}
+
+#county_pm25{
+    width: 90%;
     height: 400px;
 }
 
